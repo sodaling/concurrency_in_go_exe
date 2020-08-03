@@ -36,4 +36,10 @@ func main() {
 		c.L.Unlock()
 	}
 	fmt.Printf("还有%d个", len(queue))
+	time.Sleep(5 * time.Second)
+	// 再等一段时间，保证里面只剩下0个
+	fmt.Printf("还有%d个", len(queue))
+	// signal寻找等待时间最长的goroutine来通知
+	// 但是brodcast会像所有在等待状态的goroutine发送信号
+	// signal实现方式比较简单（用channel），但是broadcast比较难，同时cond类型比使用通道更加高效
 }
