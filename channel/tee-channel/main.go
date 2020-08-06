@@ -36,14 +36,15 @@ func main() {
 			defer close(out2)
 			defer close(out1)
 
-			for i := range orDone(done, in) {
+			for val := range orDone(done, in) {
 				var out1, out2 = out1, out2
 				for i := 0; i < 2; i++ {
 					// 两个out送完了，就拿新的值来送
+					// 重点在于置空，就可以让下一次这个堵塞
 					select {
-					case out1 <- i:
+					case out1 <- val:
 						out1 = nil
-					case out2 <- i:
+					case out2 <- val:
 						out2 = nil
 					case <-done:
 						// 其实不用return,因为一旦done了，外面这个range也结束了
