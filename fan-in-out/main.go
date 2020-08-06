@@ -1,6 +1,9 @@
 package main
 
-import "sync"
+import (
+	"fmt"
+	"sync"
+)
 
 func main() {
 	// 就好像一个班级的作业，原本由1位老师去修改，现在变成了8位老师同时批改
@@ -41,4 +44,6 @@ func main() {
 	}
 	//这边就不实验了，因为书上的一个求素数的函数没写全
 	// 书上的效果不错，时间降低了百分之78
+
+	fmt.Println(fanIn)
 }
