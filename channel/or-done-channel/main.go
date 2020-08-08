@@ -8,12 +8,11 @@ func main() {
 		ret := make(chan interface{})
 		go func() {
 			defer close(ret)
-		loop:
 			for {
 				select {
 				case <-done:
 					// 其实我觉得直接return也可以
-					break loop
+					return
 				case maybeVal, ok := <-c:
 					if ok == false {
 						return

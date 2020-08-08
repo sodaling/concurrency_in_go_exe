@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 func main() {
 	//分割来自通道上的多个值，然后将它们发送到两个独立区域
 	// 一个通道上接受一系列指令，同时记录操作日志
@@ -54,5 +56,29 @@ func main() {
 			}
 		}()
 		return out1, out2
+	}
+	// 这边还需要一个repeat
+	repeat := func(done <-chan struct{},values ...interface{})<-chan interface {}{
+		ret := make(chan interface{})
+		go func() {
+			defer close(ret)
+			for {
+				for _,v:= range values{
+					select {
+					case <-done:
+						return
+					case ret <- v:
+					}
+				}
+			}
+		}()
+		return ret
+	}
+	done := make(chan struct{})
+	defer close(done)
+	out1,out2 := tee(done,repeat(done,1,2))
+	for v1 := range out1{
+		// 下面就连着输出两个了
+		fmt.Println(v1,<-out2)
 	}
 }
